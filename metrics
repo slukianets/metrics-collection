@@ -1,0 +1,59 @@
+#!/usr/bin/python3
+
+import sys, getopt
+import psutil
+import socket
+
+system = socket.gethostname()
+#host_system = socket.gethostbyaddr("172.17.0.1")
+#print(host_system)
+def usage():
+    print("Please use following syntax:")
+    print("metrics [-h]|[--help] [--cpu] [--mem]")
+
+def cpu_info():
+    print("Start reading CPU information...")
+    cpu_info = psutil.cpu_times(percpu = True)
+    for i in range(0,len(cpu_info)):
+        print("{0}.cpu_{2}.idle {1}".format(system,cpu_info[i].idle, i + 1))
+        print("{0}.cpu_{2}.user {1}".format(system,cpu_info[i].user, i + 1))
+        print("{0}.cpu_{2}.guest {1}".format(system,cpu_info[i].guest, i + 1))
+        print("{0}.cpu_{2}.oiwait: {1}".format(system,cpu_info[i].iowait, i + 1))
+        print("{0}.cpu_{2}.stolen: {1}".format(system,cpu_info[i].steal, i + 1))
+        print("{0}.cpu_{2}.system: {1}".format(system,cpu_info[i].system, i + 1))
+
+def memory_info():
+    print("Start reading memory information...")
+    virtual_mem = psutil.virtual_memory()
+    swaped_mem = psutil.swap_memory()
+    print('Virtual Memory Total: {0}'.format(virtual_mem.total))
+    print('Virtual Memory Used: {0}'.format(virtual_mem.used))
+    print('Virtual Memory Free: {0}'.format(virtual_mem.available))
+    print('Virtual Memory Shared: {0}'.format(virtual_mem.active))
+    print('Swap Memory Total: {0}'.format(swaped_mem.total))
+    print('Swap Memory Used: {0}'.format(swaped_mem.used))
+    print('Swap Memory Free: {0}'.format(swaped_mem.free))
+
+def helper():
+    print("Syntax: metrics [-h]|[--help] [--cpu] [--mem]")
+    print("The utility metrics is used for quick chekcing CPU and MEMORY information on your Linux PC or server.")
+    print("Please, for using this utility, check if you have the lastest verion of Python 3.5 (or later) and installed packge Pcutil.")
+
+if (len(sys.argv) == 1):
+    usage()
+    sys.exit(2)
+
+try:
+    opts_list, args_list = getopt.getopt(sys.argv[1:], "hcm", ["help", "cpu" ,"mem"])
+except getopt.GetoptError as err:
+    print(err)
+    usage()
+    sys.exit(2)
+for opt, arg in opts_list:
+    if opt == "--cpu":
+        cpu_info()
+    elif opt == "--mem":  
+        memory_info()
+    elif opt in ("-h", "--help"):
+        helper()
+
