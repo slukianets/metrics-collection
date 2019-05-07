@@ -5,8 +5,7 @@ import psutil
 import socket
 
 system = socket.gethostname()
-#host_system = socket.gethostbyaddr("172.17.0.1")
-#print(host_system)
+
 def usage():
     print("Please use following syntax:")
     print("metrics [-h]|[--help] [--cpu] [--mem]")
